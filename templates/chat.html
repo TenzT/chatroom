@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聊天室</title>
+    <script src="https://cdn.bootcss.com/socket.io/2.0.4/socket.io.slim.js"></script>
+</head>
+<body>
+<div>
+    <h1 id="id-rooms-title">聊天室</h1>
+    <a class="chat-room" href="#">大厅</a>
+    <a class="chat-room" href="#">游戏</a>
+    <a class="chat-room" href="#">水区</a>
+</div>
+<h1>chat</h1>
+<div>
+    <textarea id="id-chat-area" cols="80" rows="16" disabled></textarea>
+</div>
+<input id="id-input-text" size="80" placeholder="输入聊天消息"><br><br>
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
+</body>
+</html>
