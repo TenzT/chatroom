@@ -1,12 +1,19 @@
 from flask import Flask
+from routes import main as main_blueprint
+from events import socketio
 
-app = Flask(__name__)
 
+def create_app():
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'fswfsffs'
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
+    app.register_blueprint(main_blueprint)
+
+    socketio.init_app(app)
+    return app
 
 
 if __name__ == '__main__':
-    app.run()
+    app = create_app()
+    app.debug = True
+    socketio.run(app, host='0.0.0.0', port=80)
