@@ -11,7 +11,6 @@ socketio = SocketIO()
 
 @socketio.on('join', namespace='/chat')
 def join(data):
-    print('join', data)
     room = data['room']
     join_room(room)
     session['room'] = room
@@ -29,7 +28,6 @@ def send(data):
     name = session.get('name')
     message = data.get('message')
     formatted = '{} : {}'.format(name, message)
-    print('send', formatted)
     d = dict(
         message=formatted
     )
@@ -42,6 +40,6 @@ def leave(data):
     leave_room(room)
     name = session.get('name')
     d = dict(
-        message='{} 离开了房间'.format(name),
+        message='用户:({}) 离开了房间'.format(name),
     )
     emit('status', d, room=room)
