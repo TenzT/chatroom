@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聊天室</title>
+    <link href="https://cdn.bootcss.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    {% block head_static %}{% endblock %}
+</head>
+<body>
+{% include 'base/navbar.html' %}
+<div class="container" id="main">
+    {% block main %}
+    {% endblock %}
+</div>
+
+{% block body_static %}{% endblock %}
+</body>
+</html>

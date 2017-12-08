@@ -15,8 +15,9 @@ def join(data):
     join_room(room)
     session['room'] = room
     name = session.get('name')
-    message = '用户:({}) 进入了房间'.format(name)
+    message = '----- 进入了房间 -----'.format(name)
     d = dict(
+        user=name,
         message=message,
     )
     emit('status', d, room=room)
@@ -27,9 +28,9 @@ def send(data):
     room = session.get('room')
     name = session.get('name')
     message = data.get('message')
-    formatted = '{} : {}'.format(name, message)
     d = dict(
-        message=formatted
+        user=name,
+        message=message,
     )
     emit('message', d, room=room)
 
@@ -40,6 +41,7 @@ def leave(data):
     leave_room(room)
     name = session.get('name')
     d = dict(
-        message='用户:({}) 离开了房间'.format(name),
+        user=name,
+        message='----- 离开了房间 -----',
     )
     emit('status', d, room=room)

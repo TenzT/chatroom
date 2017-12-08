@@ -1,14 +1,6 @@
 var socket
 // 默认聊天房间
-var currentRoom = '大厅'
-
-var e = function (sel) {
-    return document.querySelector(sel)
-}
-
-var log = function() {
-    console.log.apply(console, arguments)
-}
+var currentRoom = e('#id-current-room').value
 
 // 加入房间
 var joinRoom = function (room) {
@@ -27,31 +19,47 @@ var changeTitle = function () {
     } else {
         var title = '聊天室 - ' + currentRoom
     }
-    var tag = e("#id-rooms-title")
-    tag.innerHTML = title
+    e("#id-rooms-title").innerHTML = title
 }
 
 var clearBoard = function () {
-    e("#id-chat-area").value = ''
+    e("#id-chat-area").innerHTML = ''
 }
 
-// 给 input 元素绑定回车键发送消息的事件
-var bindEventSendMessage = function () {
+// 插入从后端收到的消息
+var insertMessage = function (data) {
+    var d = new Date()
+    var messageDiv = `
+        <div>
+            <span class="label label-primary">${data.user}</span>
+            <span class="text-muted"><small>(${d.toLocaleTimeString()})</small></span>
+            ${data.message}
+        </div>
+    `
+    e("#id-chat-area").insertAdjacentHTML('beforeend', messageDiv)
+}
+
+// 得到用户输入的消息并发送消息给后端
+var getMessageAndSend = function () {
     var input = e('#id-input-text')
-    input.addEventListener('keypress', function (event) {
+    message = input.value
+    var data = {
+        message: message,
+    }
+    socket.emit('send', data, function () {
+        // 清空用户输入
+        input.value = ''
+    })
+}
+
+// 给 input 元素绑定回车键及点击发送消息的事件
+var bindEventSendMessage = function () {
+    e('#id-input-text').addEventListener('keypress', function (event) {
         if (event.key == 'Enter') {
-            // 得到用户输入的消息
-            message = input.value
-            // 发送消息给后端
-            var data = {
-                message: message,
-            }
-            socket.emit('send', data, function () {
-                // 清空用户输入
-                input.value = ''
-            })
+            getMessageAndSend()
         }
     })
+    e('#id-button-send').addEventListener('click', getMessageAndSend)
 }
 
 // 绑定切换房间的事件
@@ -74,11 +82,11 @@ var bindEventReceiveMessage  = function () {
     var chatArea = e('#id-chat-area')
     // 新用户加入聊天室的事件
     socket.on('status', function (data) {
-        chatArea.value += `< ${data.message} >\n`
+        insertMessage(data)
     })
     // 收到其他用户发送的新消息的事件
     socket.on('message', function (data) {
-        chatArea.value += (data.message + '\n')
+        insertMessage(data)
     })
 }
 

@@ -1,22 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>聊天室</title>
+{% extends 'base/base.html' %}
+{% block head_static %}
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.bootcss.com/socket.io/2.0.4/socket.io.slim.js"></script>
-</head>
-<body>
-<div>
-    <h1 id="id-rooms-title">聊天室</h1>
-    <a class="chat-room" href="#">大厅</a>
-    <a class="chat-room" href="#">游戏</a>
-    <a class="chat-room" href="#">水区</a>
-</div>
-<h1>chat</h1>
-<div>
-    <textarea id="id-chat-area" cols="80" rows="16" disabled></textarea>
-</div>
-<input id="id-input-text" size="80" placeholder="输入聊天消息"><br><br>
-<script src="{{ url_for('static', filename='chat.js') }}"></script>
-</body>
-</html>
+{% endblock %}
+{% block main %}
+    <div class="jumbotron">
+        <input id="id-current-room" type="hidden" value="{{ current_room }}">
+        <h2 id="id-rooms-title">聊天室</h2>
+        <ul class="nav nav-tabs">
+            {% for r in custom_rooms %}
+                <li class="pull-right {% if r == current_room %}active{% endif %}">
+                    <a class="chat-room" href="#id-tab-content" data-toggle="tab" aria-expanded="false">{{ r }}</a>
+                </li>
+            {% endfor %}
+            {% for r in public_rooms %}
+                <li class="{% if r == current_room %}active{% endif %}">
+                    <a class="chat-room" href="#id-tab-content" data-toggle="tab" aria-expanded="false">{{ r }}</a>
+                </li>
+            {% endfor %}
+
+        </ul>
+        <div class="tab-content">
+            <div id="id-chat-area" class="tab-pane fade active in well" id="id-tab-content">
+
+{#                <textarea id="id-chat-area" cols="80" rows="16" disabled></textarea>#}
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <input id="id-input-text" class="form-control" type="text" placeholder="输入聊天消息">
+                <span class="input-group-btn">
+                    <button id="id-button-send" class="btn btn-default" type="button">Button</button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block body_static %}
+    <script src='{{ url_for('static', filename='utils.js') }}'></script>
+    <script src="{{ url_for('static', filename='chat.js') }}"></script>
+{% endblock %}
+
