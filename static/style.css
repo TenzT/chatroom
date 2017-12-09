@@ -15,6 +15,7 @@ body {
     min-height: 400px;
     max-height: 400px;
     overflow-y: auto;
+    background-color: #eee;
 }
 #id-rooms-title {
     margin-top: 0;

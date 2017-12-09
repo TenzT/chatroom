@@ -36,20 +36,25 @@ var insertMessage = function (data) {
             ${data.message}
         </div>
     `
-    e("#id-chat-area").insertAdjacentHTML('beforeend', messageDiv)
+    var chatArea = e("#id-chat-area")
+    chatArea.insertAdjacentHTML('beforeend', messageDiv)
+    // 插入新消息时滚动条自动触底
+    chatArea.scrollTop = chatArea.scrollHeight
 }
 
 // 得到用户输入的消息并发送消息给后端
 var getMessageAndSend = function () {
     var input = e('#id-input-text')
     message = input.value
-    var data = {
-        message: message,
+    if (message != '') {
+        var data = {
+            message: message,
+        }
+        socket.emit('send', data, function () {
+            // 清空用户输入
+            input.value = ''
+        })
     }
-    socket.emit('send', data, function () {
-        // 清空用户输入
-        input.value = ''
-    })
 }
 
 // 给 input 元素绑定回车键及点击发送消息的事件
@@ -75,6 +80,10 @@ var bindEventChangeRoom = function () {
             })
         }
     })
+    // 离开页面
+    window.onbeforeunload = function () {
+        socket.emit('leave', {})
+    }
 }
 
 // 注册 2 个 websocket 事件, 后端发送消息到前端后, 自动触发
