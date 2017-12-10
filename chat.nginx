@@ -1,0 +1,17 @@
+server {
+    listen 80;
+    location / {
+        proxy_pass http://localhost:2003;
+    }
+    location /socket.io {
+            include proxy_params;
+            proxy_http_version 1.1;
+            proxy_buffering off;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+            proxy_pass http://localhost:2003/socket.io;
+        }
+    location /static {
+        alias /root/chatroom/static;
+    }
+}
